@@ -15,5 +15,24 @@ while ! nc -z 127.0.0.1 6379; do
 done
 echo "Redis is ready."
 
-# Execute the main command
-exec "$@"
+# Now, wait for the voapi application to be ready
+echo "Starting voapi and waiting for it to be ready..."
+# Start the application in the background
+"$@" &
+app_pid="$!"
+
+# Wait for the app to respond on port 6800
+while ! wget -q -T 1 -O /dev/null http://127.0.0.1:6800; do
+    # Check if the background process is still alive
+    if ! kill -0 "$app_pid" 2>/dev/null; then
+        echo "voapi application failed to start."
+        exit 1
+    fi
+    echo "Waiting for voapi to respond on port 6800..."
+    sleep 1
+done
+
+echo "voapi is ready and responding."
+
+# Bring the application process to the foreground
+wait "$app_pid"
