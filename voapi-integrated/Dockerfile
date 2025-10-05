@@ -7,7 +7,7 @@ RUN cp /voapi /extracted/voapi
 FROM alpine:latest
 
 # Install dependencies: mysql, redis, supervisor
-RUN apk add --no-cache mysql mysql-client redis supervisor
+RUN apk add --no-cache mysql mysql-client redis supervisor netcat-openbsd
 
 # Create necessary directories
 RUN mkdir -p /app /var/lib/mysql /var/run/mysqld /public /file /docker-entrypoint-initdb.d
@@ -21,7 +21,8 @@ COPY config.yml /app/config.yml
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY init-db.sql /docker-entrypoint-initdb.d/init-db.sql
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY wait-for-services.sh /wait-for-services.sh
+RUN chmod +x /entrypoint.sh /wait-for-services.sh
 
 # Expose the application port
 EXPOSE 6800
