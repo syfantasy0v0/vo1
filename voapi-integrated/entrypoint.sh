@@ -4,8 +4,8 @@
 if [ ! -d "/var/lib/mysql/voapi" ]; then
     echo "Database 'voapi' not found. Creating user and databases..."
     
-    # Start mysqld temporarily to initialize users and databases
-    /usr/bin/mariadbd --user=mysql --datadir=/var/lib/mysql --skip-networking &
+    # Start mysqld temporarily to initialize users and databases, redirecting all output to /dev/null
+    /usr/bin/mariadbd --user=mysql --datadir=/var/lib/mysql --skip-networking > /dev/null 2>&1 &
     pid="$!"
     
     # Wait for it to start
