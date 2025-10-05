@@ -13,6 +13,9 @@ RUN apk add --no-cache mysql mysql-client redis supervisor netcat-openbsd
 RUN mkdir -p /app /var/lib/mysql /var/run/mysqld /public /file /docker-entrypoint-initdb.d
 RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
+# Pre-initialize the database directory during the build process
+RUN mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+
 # Copy the application from the extractor stage
 COPY --from=extractor /extracted/voapi /app/voapi
 
