@@ -3,8 +3,14 @@
 # Check if the database directory is empty
 if [ -z "$(ls -A /var/lib/mysql)" ]; then
     echo "Database directory is empty. Initializing MariaDB..."
-    # Initialize MariaDB data directory
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+    # Initialize MariaDB data directory in the background
+    mariadb-install-db --user=mysql --datadir=/var/lib/mysql &
+    install_pid="$!"
+
+    # Wait for the installation to finish, keeping the container alive
+    echo "Waiting for mariadb-install-db to finish..."
+    wait "$install_pid"
+    echo "mariadb-install-db finished."
 
     # Start mysqld temporarily to initialize users and databases
     /usr/bin/mariadbd --user=mysql --datadir=/var/lib/mysql --skip-networking &
