@@ -17,7 +17,7 @@ RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 COPY --from=extractor /extracted/voapi /app/voapi
 
 # Copy configuration and initialization files
-COPY config.yml /config.yml
+COPY config.yml /app/config.yml
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY init-db.sql /docker-entrypoint-initdb.d/init-db.sql
 COPY entrypoint.sh /entrypoint.sh
