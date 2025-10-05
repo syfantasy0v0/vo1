@@ -1,9 +1,7 @@
 # Stage 1: Extract the application from the official image
 FROM voapi/voapi:latest AS extractor
 RUN mkdir -p /extracted
-RUN cp /voapi /extracted/voapi && \
-    cp -r /public /extracted/public && \
-    cp -r /file /extracted/file
+RUN cp /voapi /extracted/voapi
 
 # Stage 2: Create the final integrated image
 FROM alpine:latest
@@ -15,10 +13,8 @@ RUN apk add --no-cache mysql mysql-client redis supervisor
 RUN mkdir -p /app /var/lib/mysql /var/run/mysqld /public /file /docker-entrypoint-initdb.d
 RUN chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
-# Copy the application and assets from the extractor stage
+# Copy the application from the extractor stage
 COPY --from=extractor /extracted/voapi /app/voapi
-COPY --from=extractor /extracted/public /public
-COPY --from=extractor /extracted/file /file
 
 # Copy configuration and initialization files
 COPY config.yml /config.yml
