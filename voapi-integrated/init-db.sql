@@ -1,3 +1,6 @@
+-- 创建用户（如果不存在）
+CREATE USER IF NOT EXISTS 'voapi'@'%' IDENTIFIED BY 'voapi123';
+
 -- 创建三个数据库
 CREATE DATABASE IF NOT EXISTS `voapi` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE IF NOT EXISTS `voapi-log` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
